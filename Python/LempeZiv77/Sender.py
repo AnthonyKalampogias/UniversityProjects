@@ -1,17 +1,14 @@
 ####################################################################
 #                                                                  #
-#            Lempe-Ziv 77 Algorithm with Sliding Window            #
+#            Lempel-Ziv 77 Algorithm with Sliding Window            #
 #                             Members                              #
 #                    Antonios Kalampogias P18050                   #
-#                Theodoros Xaralampopoulos P18169                  #
-#                    Georgios Kaloudis P18054                      #
+#                          +2 other students                       #
 #                                                                  #
 #                                                   in Python 3.8  #
 ####################################################################
 
 from Encoder import LZ77Encode
-from sage.all import *
-from sage.crypto.util import ascii_integer
 from scipy.stats import entropy
 import socket 
 
@@ -38,6 +35,7 @@ while True:
     with open(UsrFile, 'r') as file:
         UnencreptedMessage = file.read().replace('\n', ' ')
 
+    # Calculate the entropy of the provided text
     def text_entropy(msg):
         pk = [msg.count(chr(i)) for i in range(256)]
         if sum(pk) == 0:
@@ -56,79 +54,8 @@ while True:
     print("Entropy of the provided message is:", text_entropy(UnencreptedMessage),"\n")
     print("Message encoded succesfully with values: {}".format(EncodedMessage),"\n")
     print("Entropy of the Encoded message is:", text_entropy(EncodedMessage),"\n")
-
-
-    def SageFunc(EncodedMessage):
-        bin = BinaryStrings()
-        EncodedMessage=bin.encoding(EncodedMessage)
-        R=PolynomialRing(GF(2),'x')
-        x=R.gen()
-        text=[i for i in EncodedMessage]
-        block=[]
-        n = int(input("Enter a n(7,9 or 15):"))
-        while n!=7 and n!=9 and n!=15:
-            n = int(input("Wrong input!Enter a n(7,9 or 15):"))
-        if n==7:
-            g=x**3 + x**2 + 1
-            k=4
-        elif n==9:
-            g=x**2 - x + 1
-            k=7
-        elif n==15:
-            g=x**4 - x**3 + x**2 - x + 1
-            k=5
-        if len(text)%k == 0:
-            while len(text)!=0:
-                for i in range(k):
-                    block.append(text[0])
-                    text.pop(0)
-                print("Block=>",block)
-                m=sum(c*x**i for i,c in enumerate(block))
-                result=(m*x**(n-k))%g 
-                #Code here throws an error,but on pure sage this works fine and we almost lost the deadline
-                #So I added the sage part of our code in this function to prevent the entire project from not running
-                #The other 3 parts of our project (Encode & Decode, Socket connnection and Entropy) work correctly.
-                padding=result.coefficients(sparse=False)
-                block=block+padding
-                while len(block)< n:
-                    block.append(0)
-                print("To block pou tha stalthei:",block)
-                clientSocket.send(block)
-                block.clear()
-                padding.clear()
-        else:
-            while len(text)!=len(text)%k:
-                for i in range(k):
-                    block.append(text[0])
-                    text.pop(0)
-                print("Block=>",block)
-                m=sum(c*x**i for i,c in enumerate(block))
-                result=(m*x**(n-k))%g
-                padding=result.coefficients(sparse=False)
-                block=block+padding
-                while len(block)< n:
-                    block.append(0)
-                print("To block pou tha stalthei:",block)
-                clientSocket.send(block)
-                block.clear()
-                padding.clear()
-            k2 = len(text)
-            for i in range(k2):
-                block.append(text[0])
-                text.pop(0)
-            while len(block)<k:
-                block.append(0)
-            m=sum(c*x**i for i,c in enumerate(block))
-            result=(m*x**(n-k))%g
-            padding=result.coefficients(sparse=False)
-            block=block+padding
-            while len(block)< n:
-                block.append(0)
-            print("To block pou tha stalthei:",block)
-            clientSocket.send(block)
-            block.clear()
-            padding.clear()
     
+
     EncodedMessage=str.encode(EncodedMessage)
     clientSocket.send(EncodedMessage)
     print("Message has been transmitted.\nExiting..")

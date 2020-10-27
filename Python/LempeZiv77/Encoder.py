@@ -1,10 +1,9 @@
 ####################################################################
 #                                                                  #
-#            Lempe-Ziv 77 Algorithm with Sliding Window            #
+#            Lempel-Ziv 77 Algorithm with Sliding Window            #
 #                             Members                              #
 #                    Antonios Kalampogias P18050                   #
-#                Theodoros Xaralampopoulos P18169                  #
-#                    Georgios Kaloudis P18054                      #
+#                          +2 other students                       #
 #                                                                  #
 #                                                   in Python 3.8  #
 ####################################################################
